@@ -6,6 +6,7 @@ import Login from "../Pages/Login";
 import MyTask from "../Pages/MyTask";
 import SignUp from "../Pages/SignUp";
 import EditTask from "../Pages/EditTask";
+import ErrorPage from "../Shared/ErrorPage/ErrorPage";
 
 export const router = createBrowserRouter([
     {
@@ -36,6 +37,10 @@ export const router = createBrowserRouter([
                 path: "/edit-task/:id",
                 loader: ({ params }) => fetch(`${process.env.REACT_APP_SERVER_URL}/task/edit/${params.id}`),
                 element: <EditTask />
+            },
+            {
+                path: "*",
+                element: <ErrorPage />
             }
         ]
     }

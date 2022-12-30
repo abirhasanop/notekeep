@@ -5,18 +5,21 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 import { Link } from 'react-router-dom';
+import { useContext } from 'react';
+import { AuthContext } from '../Contexts/AuthProvider';
 
 const MyTask = () => {
+    const { user } = useContext(AuthContext)
     const [allTasks, setAllTasks] = useState([])
     const [items, setItems] = useState(true)
 
     useEffect(() => {
-        fetch(`${process.env.REACT_APP_SERVER_URL}/task`)
+        fetch(`${process.env.REACT_APP_SERVER_URL}/task?email=${user?.email}`)
             .then(res => res.json())
             .then(data => {
                 setAllTasks(data.data);
             })
-    }, [items])
+    }, [items, user?.email])
 
     const handleComplete = (id) => {
         fetch(`${process.env.REACT_APP_SERVER_URL}/task?id=${id}&status=${"complete"}`, {
@@ -51,8 +54,6 @@ const MyTask = () => {
             })
     }
 
-    console.log(allTasks);
-
     return (
         <>
             <main className='w-[70%] mx-auto'>
@@ -70,7 +71,7 @@ const MyTask = () => {
                                     <div className="p-5">
                                         <div className='flex justify-between items-center'>
                                             <h5 className="w-[70%] mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{title.length > 15 ? title.slice(0, 15) + "..." : title ? title : "Untitled"}</h5>
-                                            <Link to={`/edit-task/${_id}`} class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</Link>
+                                            <Link to={`/edit-task/${_id}`} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</Link>
                                         </div>
 
                                         <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">{description.length > 80 ? description.slice(0, 80) + "..." : description}</p>
@@ -90,7 +91,6 @@ const MyTask = () => {
                                         </div>
                                     </div>
                                 </div>
-
                             )
                         })
                     }

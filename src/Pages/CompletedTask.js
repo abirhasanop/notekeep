@@ -32,7 +32,23 @@ const CompletedTask = () => {
 
 
     const handleNotComplete = (id) => {
-        console.log(id);
+        fetch(`${process.env.REACT_APP_SERVER_URL}/task?id=${id}&status=${"incomplete"}`, {
+            method: "PUT",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({})
+        })
+            .then(res => res.json())
+            .then(data => {
+                setItems(!items)
+                console.log(data);
+                toast.success(data.message)
+            })
+            .catch(err => {
+                console.log(err);
+            })
+
     }
 
     return (

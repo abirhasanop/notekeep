@@ -2,13 +2,13 @@ import React, { useContext, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { BsCardImage } from 'react-icons/bs';
 import { MdAddCircle } from 'react-icons/md';
-import { useLoaderData } from 'react-router-dom';
+import { useLoaderData, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../Contexts/AuthProvider';
 import SmallLoader from '../Shared/Loader/SmallLoader';
 
 const EditTask = () => {
     const { data } = useLoaderData()
-    const { description, img, title } = data
+    const { description, img, title, _id } = data
 
 
     const { user } = useContext(AuthContext)
@@ -16,7 +16,7 @@ const EditTask = () => {
     const [imageLoading, setImageLoading] = useState(false)
     const [taskLoading, setTaskLoading] = useState(false)
 
-
+    const navigate = useNavigate()
 
 
 
@@ -28,7 +28,6 @@ const EditTask = () => {
         const description = form.description.value
         const taskImage = image
         const task = { title, description, img: taskImage, status: "incomplete", email: user?.email }
-        console.log(task);
 
         if (!taskImage) {
             // toast.success("Please upload an image")
@@ -39,6 +38,24 @@ const EditTask = () => {
         }
 
 
+        fetch(`${process.env.REACT_APP_SERVER_URL}/task/edit/${_id}`, {
+            method: "PUT",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(task)
+        })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                toast.success(data.message)
+                setImage('')
+                form.reset()
+                navigate("/my-task")
+            })
+            .catch(err => {
+                console.log(err);
+            })
     }
 
     const handleImageChange = (e) => {
@@ -82,11 +99,10 @@ const EditTask = () => {
 
                         }
                     </label>
-                    <div className='flex items-center'>
-                        {/* <button type='reset'><RiDeleteBin5Fill className='text-4xl mx-1 text-red-400 cursor-pointer' /></button> */}
+                    <div>
                         {
                             taskLoading ? <SmallLoader />
-                                : <a href='_' className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                                : <button className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</button>
                         }
                     </div>
                 </div>

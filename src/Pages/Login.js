@@ -1,12 +1,36 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { toast } from 'react-hot-toast';
 import { Link } from 'react-router-dom';
+import { AuthContext } from '../Contexts/AuthProvider';
 
 const Login = () => {
+    const { signin, loading, setLoading, signInWithGoogle, resetPassword } = useContext(AuthContext)
+
+    const handleSubmit = (e) => {
+        e.preventDefault()
+        const form = e.target
+        const email = form.email.value
+        const password = form.password.value
+
+        signin(email, password)
+            .then(result => {
+                const user = result.user
+                toast.success("Login Successful")
+                // navigate(from, { replace: true })
+                console.log(user);
+            })
+            .catch(err => {
+                console.error(err);
+                toast.error(err.message)
+            })
+    }
+
+
     return (
         <div>
             <div>
                 <div className="w-full mx-auto max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow-md sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
-                    <form className="space-y-6" action="#">
+                    <form onSubmit={handleSubmit} className="space-y-6" action="#">
                         <h5 className="text-xl font-medium text-gray-900 dark:text-white">Sign in to Note Keep</h5>
                         <div>
                             <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
