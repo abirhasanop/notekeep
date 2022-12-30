@@ -1,50 +1,101 @@
 import React from 'react';
 import { RiDeleteBin5Fill } from 'react-icons/ri';
 import { MdDone } from 'react-icons/md'
-import ModalDetails from '../Shared/ModalDetails/ModalDetails';
 import { useState } from 'react';
+import { useEffect } from 'react';
+import { toast } from 'react-hot-toast';
 
 const MyTask = () => {
-    const [task, setTask] = useState('')
-    console.log(task);
+    const [allTasks, setAllTasks] = useState([])
+    const [items, setItems] = useState(true)
+
+    useEffect(() => {
+        fetch(`${process.env.REACT_APP_SERVER_URL}/task`)
+            .then(res => res.json())
+            .then(data => {
+                setAllTasks(data.data);
+            })
+    }, [items])
+
+    const handleComplete = (id) => {
+        fetch(`${process.env.REACT_APP_SERVER_URL}/task?id=${id}&status=${"complete"}`, {
+            method: "PUT",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({})
+        })
+            .then(res => res.json())
+            .then(data => {
+                setItems(!items)
+                console.log(data);
+                toast.success(data.message)
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }
+
+    const handleDelete = (id) => {
+        fetch(`${process.env.REACT_APP_SERVER_URL}/task/${id}`, {
+            method: "DELETE"
+        })
+            .then(res => res.json())
+            .then(data => {
+                setItems(!items)
+                toast.success(data.message)
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }
+
+    console.log(allTasks);
 
     return (
-        <main className='w-[70%] mx-auto'>
-            <ModalDetails task={task} />
-            <section className='flex flex-wrap gap-7 justify-center'>
-                {
-                    [...Array(20)].map((p, i) => {
-                        const img = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQD_6mO1a496PTeIRBhAUGjkfGzeEEMiIzz2g&usqp=CAU'
-                        return (
+        <>
+            <main className='w-[70%] mx-auto'>
+                <section className='flex flex-wrap gap-7'>
+                    {
+                        allTasks?.map((task, i) => {
+                            const { img, title, description, _id, status } = task
+                            return (
+                                status === "incomplete" &&
 
-                            <div key={i} className="w-72 bg-white border border-gray-200 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700">
+                                <div div key={i} className="w-72 bg-white border border-gray-200 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700" >
 
-                                <img className="rounded-t-lg w-full" src={img} alt="" />
+                                    <img className="rounded-t-lg w-full h-44" src={img} alt="" />
 
-                                <div className="p-5">
-                                    <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Noteworthy tech acquisitions 2021</h5>
+                                    <div className="p-5">
+                                        <div className='flex justify-between items-center'>
+                                            <h5 className="w-[70%] mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{title.length > 15 ? title.slice(0, 15) + "..." : title ? title : "Untitled"}</h5>
+                                            <a href="#_" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                                        </div>
 
-                                    <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.</p>
+                                        <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">{description.length > 120 ? description.slice(0, 120) + "..." : description}</p>
 
-                                    <div className='flex justify-between items-center'>
-                                        <label onClick={() => setTask(img)} data-modal-toggle="defaultModal" className="inline-flex items-center px-3 py-2 h-7 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 cursor-pointer">
-                                            Details
-                                            <svg aria-hidden="true" className="w-4 h-4 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
-                                        </label>
+                                        <div className='flex justify-between items-center'>
 
-                                        <div>
-                                            <button><RiDeleteBin5Fill className='text-3xl text-red-400 hover:text-red-500 cursor-pointer' /></button>
-                                            <button><MdDone className='text-3xl p-1 bg-green-400 rounded-full ml-1 text-white hover:bg-green-500 cursor-pointer' /></button>
+                                            <button className="inline-flex items-center px-3 py-2 h-7 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 cursor-pointer">
+                                                Details
+                                                <svg aria-hidden="true" className="w-4 h-4 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
+                                            </button>
+
+
+                                            <div>
+                                                <button onClick={() => handleDelete(_id)}><RiDeleteBin5Fill className='text-3xl text-red-400 hover:text-red-500 cursor-pointer' /></button>
+                                                <button onClick={() => handleComplete(_id)}><MdDone className='text-3xl p-1 bg-green-400 rounded-full ml-1 text-white hover:bg-green-500 cursor-pointer' /></button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        )
-                    })
-                }
 
-            </section>
-        </main>
+                            )
+                        })
+                    }
+                </section>
+            </main>
+        </>
     );
 };
 
