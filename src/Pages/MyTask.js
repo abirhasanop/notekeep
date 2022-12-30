@@ -4,6 +4,7 @@ import { MdDone } from 'react-icons/md'
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { toast } from 'react-hot-toast';
+import { Link } from 'react-router-dom';
 
 const MyTask = () => {
     const [allTasks, setAllTasks] = useState([])
@@ -69,10 +70,10 @@ const MyTask = () => {
                                     <div className="p-5">
                                         <div className='flex justify-between items-center'>
                                             <h5 className="w-[70%] mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{title.length > 15 ? title.slice(0, 15) + "..." : title ? title : "Untitled"}</h5>
-                                            <a href="#_" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                                            <Link to={`/edit-task/${_id}`} class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</Link>
                                         </div>
 
-                                        <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">{description.length > 120 ? description.slice(0, 120) + "..." : description}</p>
+                                        <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">{description.length > 80 ? description.slice(0, 80) + "..." : description}</p>
 
                                         <div className='flex justify-between items-center'>
 

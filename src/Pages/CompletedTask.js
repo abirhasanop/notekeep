@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
-import { MdDone } from 'react-icons/md';
 import { RiDeleteBin5Fill } from 'react-icons/ri';
+import { Link } from 'react-router-dom';
 
 const CompletedTask = () => {
 
@@ -30,6 +30,11 @@ const CompletedTask = () => {
             })
     }
 
+
+    const handleNotComplete = (id) => {
+        console.log(id);
+    }
+
     return (
         <>
             <main className='w-[70%] mx-auto'>
@@ -44,10 +49,14 @@ const CompletedTask = () => {
 
                                     <img className="rounded-t-lg w-full h-44" src={img} alt="" />
 
-                                    <div className="p-5">
-                                        <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{title ? title : "Untitled"}</h5>
 
-                                        <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">{description}</p>
+                                    <div className="p-5">
+                                        <Link onClick={() => handleNotComplete(_id)} className="font-medium text-blue-600 dark:text-blue-500 hover:underline text-sm">Not Complete</Link>
+                                        <div className='flex justify-between items-center'>
+                                            <h5 className="w-[70%] mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{title.length > 15 ? title.slice(0, 15) + "..." : title ? title : "Untitled"}</h5>
+                                        </div>
+
+                                        <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">{description.length > 80 ? description.slice(0, 80) + "..." : description}</p>
 
                                         <div className='flex justify-between items-center'>
 
@@ -57,7 +66,8 @@ const CompletedTask = () => {
                                             </button>
 
 
-                                            <div>
+                                            <div className='flex items-center gap-2'>
+
                                                 <button onClick={() => handleDelete(_id)}><RiDeleteBin5Fill className='text-3xl text-red-400 hover:text-red-500 cursor-pointer' /></button>
                                             </div>
                                         </div>

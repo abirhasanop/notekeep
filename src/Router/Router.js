@@ -33,7 +33,8 @@ export const router = createBrowserRouter([
                 element: <Login />
             },
             {
-                path: "/edit-task",
+                path: "/edit-task/:id",
+                loader: ({ params }) => fetch(`${process.env.REACT_APP_SERVER_URL}/task/edit/${params.id}`),
                 element: <EditTask />
             }
         ]
