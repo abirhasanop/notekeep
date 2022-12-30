@@ -1,20 +1,23 @@
 import React, { useEffect, useState } from 'react';
+import { useContext } from 'react';
 import { toast } from 'react-hot-toast';
 import { RiDeleteBin5Fill } from 'react-icons/ri';
 import { Link } from 'react-router-dom';
+import { AuthContext } from '../Contexts/AuthProvider';
 
 const CompletedTask = () => {
+    const { user } = useContext(AuthContext)
 
     const [allTasks, setAllTasks] = useState([])
     const [items, setItems] = useState(true)
 
     useEffect(() => {
-        fetch(`${process.env.REACT_APP_SERVER_URL}/task`)
+        fetch(`${process.env.REACT_APP_SERVER_URL}/task?email=${user?.email}`)
             .then(res => res.json())
             .then(data => {
                 setAllTasks(data.data);
             })
-    }, [items])
+    }, [items, user?.email])
 
     const handleDelete = (id) => {
         fetch(`${process.env.REACT_APP_SERVER_URL}/task/${id}`, {

@@ -1,10 +1,11 @@
 import React, { useContext } from 'react';
 import { toast } from 'react-hot-toast';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../Contexts/AuthProvider';
 
 const Login = () => {
-    const { signin, loading, setLoading, signInWithGoogle, resetPassword } = useContext(AuthContext)
+    const { signin, signInWithGoogle } = useContext(AuthContext)
+    const navigate = useNavigate()
 
     const handleSubmit = (e) => {
         e.preventDefault()
@@ -17,6 +18,7 @@ const Login = () => {
                 const user = result.user
                 toast.success("Login Successful")
                 // navigate(from, { replace: true })
+                navigate("/")
                 console.log(user);
             })
             .catch(err => {
@@ -25,6 +27,15 @@ const Login = () => {
             })
     }
 
+    // Google sign in
+    const handleGoogleSignIn = () => {
+        signInWithGoogle()
+            .then(() => {
+                toast.success("Login Successful")
+                // navigate(from, { replace: true })
+                navigate("/")
+            })
+    }
 
     return (
         <div>
@@ -42,10 +53,12 @@ const Login = () => {
                         </div>
                         <a href="#_" className="text-sm text-blue-700 hover:underline dark:text-blue-500">Lost Password?</a>
                         <button type="submit" className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Login to your account</button>
-                        <div className="text-sm font-medium text-gray-500 dark:text-gray-300">
-                            Not registered? <Link to="/sign-up" className="text-blue-700 hover:underline dark:text-blue-500">Create account</Link>
-                        </div>
                     </form>
+                    <button onClick={handleGoogleSignIn} type="submit" className="w-full mt-5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Sign In Google</button>
+                    <div className="text-sm font-medium text-gray-500 dark:text-gray-300">
+                        Not registered? <Link to="/sign-up" className="text-blue-700 hover:underline dark:text-blue-500">Create account</Link>
+                    </div>
+
                 </div>
             </div>
         </div>

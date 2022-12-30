@@ -7,6 +7,7 @@ import MyTask from "../Pages/MyTask";
 import SignUp from "../Pages/SignUp";
 import EditTask from "../Pages/EditTask";
 import ErrorPage from "../Shared/ErrorPage/ErrorPage";
+import PrivateRoute from "./PrivateRoute";
 
 export const router = createBrowserRouter([
     {
@@ -19,11 +20,11 @@ export const router = createBrowserRouter([
             },
             {
                 path: "/my-task",
-                element: <MyTask />
+                element: <PrivateRoute><MyTask /></PrivateRoute>
             },
             {
                 path: "/completed-task",
-                element: <CompletedTask />
+                element: <PrivateRoute><CompletedTask /></PrivateRoute>
             },
             {
                 path: "/sign-up",
@@ -36,7 +37,7 @@ export const router = createBrowserRouter([
             {
                 path: "/edit-task/:id",
                 loader: ({ params }) => fetch(`${process.env.REACT_APP_SERVER_URL}/task/edit/${params.id}`),
-                element: <EditTask />
+                element: <PrivateRoute><EditTask /></PrivateRoute>
             },
             {
                 path: "*",
