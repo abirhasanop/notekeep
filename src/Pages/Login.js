@@ -1,11 +1,14 @@
 import React, { useContext } from 'react';
 import { toast } from 'react-hot-toast';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../Contexts/AuthProvider';
 
 const Login = () => {
     const { signin, signInWithGoogle } = useContext(AuthContext)
+
     const navigate = useNavigate()
+    const location = useLocation()
+    let from = location.state?.from?.pathname || "/"
 
     const handleSubmit = (e) => {
         e.preventDefault()
@@ -17,8 +20,7 @@ const Login = () => {
             .then(result => {
                 const user = result.user
                 toast.success("Login Successful")
-                // navigate(from, { replace: true })
-                navigate("/")
+                navigate(from, { replace: true })
                 console.log(user);
             })
             .catch(err => {
@@ -32,7 +34,7 @@ const Login = () => {
         signInWithGoogle()
             .then(() => {
                 toast.success("Login Successful")
-                // navigate(from, { replace: true })
+                navigate(from, { replace: true })
                 navigate("/")
             })
     }

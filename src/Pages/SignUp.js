@@ -1,12 +1,15 @@
 import React from 'react';
 import { useContext } from 'react';
 import { toast } from 'react-hot-toast';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../Contexts/AuthProvider';
 
 const SignUp = () => {
-    const { createUser, updateUserProfile, signInWithGoogle, name } = useContext(AuthContext)
-    console.log(name, "<----Name");
+    const { createUser, updateUserProfile, signInWithGoogle } = useContext(AuthContext)
+
+    const navigate = useNavigate()
+    const location = useLocation()
+    let from = location.state?.from?.pathname || "/"
 
     const handleSubmit = (e) => {
         e.preventDefault()
@@ -24,6 +27,7 @@ const SignUp = () => {
                 updateUserProfile(name)
                     .then(() => {
                         toast.success("Account Created Successfully")
+                        navigate(from, { replace: true })
                     })
             }).catch((err) => {
                 console.error(err.message)
@@ -37,7 +41,7 @@ const SignUp = () => {
         signInWithGoogle()
             .then(() => {
                 toast.success("Login Successful")
-                // navigate(from, { replace: true })
+                navigate(from, { replace: true })
             })
     }
 

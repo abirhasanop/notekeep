@@ -11,18 +11,39 @@ import { AuthContext } from '../Contexts/AuthProvider';
 // Modal Import
 import { Dialog, Transition } from '@headlessui/react'
 import { Fragment } from 'react'
+import BigLoder from '../Shared/Loader/BigLoder';
 
 const MyTask = () => {
     const { user } = useContext(AuthContext)
     const [allTasks, setAllTasks] = useState([])
     const [refresh, setSefresh] = useState(true)
     const [task, setTask] = useState('')
+    const [loading, setLoading] = useState(true)
+
+    // Modal Starts
+    let [isOpen, setIsOpen] = useState(false)
+
+    function closeModal() {
+        setIsOpen(false)
+    }
+
+    function openModal(task) {
+        setIsOpen(true)
+        setTask(task)
+    }
+    // Modal ends
 
     useEffect(() => {
+        setLoading(true)
         fetch(`${process.env.REACT_APP_SERVER_URL}/task?email=${user?.email}`)
             .then(res => res.json())
             .then(data => {
                 setAllTasks(data.data);
+                setLoading(false)
+            })
+            .catch(err => {
+                console.log(err);
+                setLoading(false)
             })
     }, [refresh, user?.email])
 
@@ -59,19 +80,17 @@ const MyTask = () => {
             })
     }
 
-
-
-    // Modal Starts
-    let [isOpen, setIsOpen] = useState(false)
-
-    function closeModal() {
-        setIsOpen(false)
+    if (loading) {
+        return <BigLoder />
     }
 
-    function openModal(task) {
-        setIsOpen(true)
-        setTask(task)
-    }
+
+    // if (allTasks.length < 1) {
+    //     return <h1 className='text-center text-5xl text-blue-500'>No Data Found</h1>
+    // }
+
+
+    // setLoading(false)
 
     return (
         <>
