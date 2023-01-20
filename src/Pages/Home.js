@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useContext } from 'react';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -10,7 +10,7 @@ import SmallLoader from '../Shared/Loader/SmallLoader';
 
 
 const Home = () => {
-    const { user } = useContext(AuthContext)
+    const { user, dark } = useContext(AuthContext)
     const [image, setImage] = useState('')
     const [imageLoading, setImageLoading] = useState(false)
     const [taskLoading, setTaskLoading] = useState(false)
@@ -31,6 +31,7 @@ const Home = () => {
                 icon: '⚠️',
             });
             return
+            // setImage("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQD_6mO1a496PTeIRBhAUGjkfGzeEEMiIzz2g&usqp=CAU")
         }
 
         fetch(`${process.env.REACT_APP_SERVER_URL}/task`, {
@@ -81,9 +82,9 @@ const Home = () => {
 
     return (
         <form onSubmit={handleSubmit}>
-            <div className='p-4 w-1/3 mx-auto shadow-lg shadow-gray bg-white rounded-md'>
+            <div className={`p-4 w-1/3 mx-auto shadow-lg shadow-gray bg-white rounded-md`}>
                 <input name="title" type="text" className='pl-0 text-gray-500 font-semibold border-none text-lg focus:ring-0' placeholder='Title' /> <br />
-                <input name="description" type="text" className='pl-0 text-gray-500 border-none mt-1 focus:ring-0' placeholder='Add Your Task' required />
+                <input name="description" type="text" className='pl-0 text-gray-500 border-none mt-1 focus:ring-0' placeholder='Add Your Task' />
 
                 <div className='flex justify-between items-center'>
                     <label htmlFor='image'>
@@ -101,12 +102,12 @@ const Home = () => {
 
                         {
                             user ?
-                                <button><MdAddCircle className='text-4xl mx-1 text-green-400 cursor-pointer' /></button>
+                                <button><MdAddCircle className='text-4xl mx-1 text-green-400 hover:text-green-500 cursor-pointer' /></button>
                                 :
                                 <>
                                     <Link
                                         to="/login"
-                                        className="inline-flex items-center px-3 py-2 h-7 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 cursor-pointer">
+                                        className="inline-flex items-center px-3 py-2 h-7 text-sm font-medium text-center text-white bg-orange-500 rounded-lg hover:bg-orange-600 focus:ring-4 focus:outline-none focus:ring-orange-300 dark:bg-orange-600 dark:hover:bg-orange-700 dark:focus:ring-orange-800 cursor-pointer">
                                         Login to add task
                                         <svg aria-hidden="true" className="w-4 h-4 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
                                     </Link>

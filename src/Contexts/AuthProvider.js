@@ -14,7 +14,7 @@ const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null)
     const [loading, setLoading] = useState(true)
 
-    console.log("user in authprovider---->", user);
+    // console.log("user in authprovider---->", user);
 
     //1. Create User
     const createUser = (email, password) => {
@@ -56,6 +56,10 @@ const AuthProvider = ({ children }) => {
         return sendPasswordResetEmail(auth, email)
     }
 
+
+
+
+
     useEffect(() => {
         //this part will execute once the component is mounted.
         const unsubscribe = onAuthStateChanged(auth, currentUser => {
@@ -69,6 +73,34 @@ const AuthProvider = ({ children }) => {
         }
     }, [])
 
+
+
+
+    // Dark mode starts
+    const [dark, setDark] = useState(false)
+
+    const handleTheme = () => {
+        setDark(!dark)
+        localStorage.setItem("dark-mode", !dark)
+    }
+
+    // useEffect(() => {
+    //     if (dark) {
+    //         document.querySelector("html").setAttribute("data-theme", "night")
+    //     } else {
+    //         document.querySelector("html").setAttribute("data-theme", "light")
+    //     }
+    // }, [dark])
+
+    useEffect(() => {
+        const localDark = JSON.parse(localStorage.getItem("dark-mode"))
+        console.log(localDark);
+        setDark(localDark)
+    }, [])
+
+    // dark mode ends
+
+
     const authInfo = {
         user,
         createUser,
@@ -79,7 +111,9 @@ const AuthProvider = ({ children }) => {
         resetPassword,
         loading,
         setLoading,
-        name: "abir jiooooo"
+        name: "abir jiooooo",
+        handleTheme,
+        dark
     }
 
     return (
